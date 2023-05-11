@@ -21,6 +21,7 @@ def test_student_registration_form():
         .fill_city("Karnal")\
         .submit()
 
+
     # THEN
     registration_page.should_have_registered_user_with(
         "Artem Chekanov",
