@@ -1,5 +1,6 @@
 from selene import browser, have, command
 from qa_guru_hw_4_10 import resource
+from qa_guru_hw_4_10.data.user import User
 
 
 class RegistrtionPage:
@@ -11,101 +12,53 @@ class RegistrtionPage:
         browser.open("https://demoqa.com/automation-practice-form")
         return self
 
-    def fill_first_name(self, value):
-        browser.element("#firstName").type(value)
-        return self
-
-    def fill_last_name(self, value):
-        browser.element("#lastName").type(value)
-        return self
-
-    def fill_email(self, value):
-        browser.element("#userEmail").type(value)
-        return self
-
-    def fill_date_of_birth(self, year, month, day):
-        browser.element("#dateOfBirthInput").click()
-        browser.element(".react-datepicker__year-select").send_keys(year)
-        browser.element(".react-datepicker__month-select").type(month)
+    def register(self, user: User):
+        browser.element('#firstName').type(user.first_name)
+        browser.element('#lastName').type(user.last_name)
+        browser.element('#userEmail').type(user.email)
+        browser.all('[for^=gender-radio]').element_by(have.text(user.gender)).click()
+        browser.element('#userNumber').type(user.mobile)
+        browser.element('#dateOfBirthInput').click()
+        browser.element('.react-datepicker__year-select').send_keys(user.birth_year)
+        browser.element('.react-datepicker__month-select').type(user.birth_month)
         browser.element('option[value="3"]').click()
-        browser.element(f".react-datepicker__day--0{day}").click()
-        return self
+        browser.element(f'.react-datepicker__day--0{user.birth_day}').click()
 
-    def fill_gender(self, value):
-        browser.all("[for^=gender-radio]").element_by(have.text(value)).click()
-        return self
+        browser.element('#subjectsInput').type(user.subjects).press_enter()
+        browser.driver.execute_script('window.scrollTo(0,300)')
+        browser.element('[for=hobbies-checkbox-1]').click()
+        browser.element('[for=hobbies-checkbox-3]').click()
 
-    def fill_mobile(self, value):
-        browser.element("#userNumber").type(value)
-        return self
+        browser.element("#uploadPicture").set_value(resource.path(user.picture))
 
-    def fill_subjects(self, math_value, eng_value):
-        browser.element("#subjectsInput").type(math_value).press_enter().type(
-            eng_value
-        ).press_enter()
-        return self
-
-    def scroll_to(self, value):
-        browser.driver.execute_script(value)
-        return self
-
-    def fill_hobbies(self):
-        browser.element("[for=hobbies-checkbox-1]").click()
-        browser.element("[for=hobbies-checkbox-3]").click()
-        return self
-
-    def upload_picture(self):
-        browser.element("#uploadPicture").set_value(resource.path('0.jpeg'))
-        return self
-
-    def fill_current_address(self, value):
-        browser.element("#currentAddress").perform(
-            command.js.set_value(value)
+        browser.element('#currentAddress').perform(
+            command.js.set_value(user.current_address)
         )
-        return self
-
-    def fill_state(self, value):
-        browser.element("#state").click()
-        browser.all("[id^=react-select][id*=option]").element_by(
-            have.exact_text(value)
+        browser.element('#state').click()
+        browser.all('[id^=react-select][id*=option]').element_by(
+            have.exact_text(user.state)
         ).click()
-        return self
-
-    def fill_city(self, value):
-        browser.element("#city").click()
-        browser.all("[id^=react-select][id*=option]").element_by(
-            have.exact_text(value)
+        browser.element('#city').click()
+        browser.all('[id^=react-select][id*=option]').element_by(
+            have.exact_text(user.city)
         ).click()
-        return self
+        browser.element('#submit').perform(command.js.click)
 
-    def submit(self):
-        browser.element("#submit").perform(command.js.click)
-        return self
-
-    def should_have_registered_user_with(
-            self,
-            full_name,
-            email,
-            gender,
-            mobile,
-            date_of_birth,
-            subjects,
-            hobbies,
-            picture,
-            current_address,
-            state_and_city,
-    ):
+    def should_have_registered(self, user):
+        full_name = user.first_name + ' ' + user.last_name
+        date_of_birth = user.birth_day + ' ' + user.birth_month + ',' + user.birth_year
+        state_and_city = user.state + ' ' + user.city
         browser.element(".table").all("td").even.should(
             have.texts(
                 full_name,
-                email,
-                gender,
-                mobile,
+                user.email,
+                user.gender,
+                user.mobile,
                 date_of_birth,
-                subjects,
-                hobbies,
-                picture,
-                current_address,
+                user.subjects,
+                user.hobbies,
+                user.picture,
+                user.current_address,
                 state_and_city,
             )
         )
