@@ -1,38 +1,27 @@
+from qa_guru_hw_4_10.data.user import User
 from qa_guru_hw_4_10.pages.registration_page import RegistrtionPage
 
 
 def test_student_registration_form():
     registration_page = RegistrtionPage()
-    registration_page.open()
 
-    # WHEN
-    registration_page.fill_first_name("Artem")\
-        .fill_last_name("Chekanov")\
-        .fill_email("tema-42@mail.ru")\
-        .fill_gender("Male")\
-        .fill_mobile("9876543210")\
-        .fill_date_of_birth("1987", "April", "02")\
-        .fill_subjects("math", "eng")\
-        .scroll_to("window.scrollTo(0,300)")\
-        .fill_hobbies()\
-        .upload_picture()\
-        .fill_current_address("До востребования!")\
-        .fill_state("Haryana")\
-        .fill_city("Karnal")\
-        .submit()
-
-    # THEN
-    registration_page.should_have_registered_user_with(
-        "Artem Chekanov",
-        "tema-42@mail.ru",
-        "Male",
-        "9876543210",
-        "02 April,1987",
-        "Maths, English",
-        "Sports, Music",
-        "0.jpeg",
-        "До востребования!",
-        "Haryana Karnal",
+    artem = User(
+        first_name="Artem",
+        last_name="Chekanov",
+        email="tema-42@mail.ru",
+        gender="Male",
+        mobile="9876543210",
+        birth_year="1987",
+        birth_month="April",
+        birth_day="02",
+        subjects="Math",
+        hobbies='Sports, Music',
+        picture="0.jpeg",
+        current_address="До востребования!",
+        state="Haryana",
+        city="Karnal",
     )
-
+    registration_page.open()
+    registration_page.register(artem)
+    registration_page.should_have_registered(artem)
 
