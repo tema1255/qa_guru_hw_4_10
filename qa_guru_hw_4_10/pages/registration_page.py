@@ -5,10 +5,7 @@ from qa_guru_hw_4_10 import resource
 class RegistrtionPage:
 
     def open(self):
-        browser.config.window_width = 1280
-        browser.config.window_height = 768
-        browser.config.hold_browser_open = True
-        browser.open("https://demoqa.com/automation-practice-form")
+        browser.open("/automation-practice-form")
         return self
 
     def fill_first_name(self, value):

@@ -1,7 +1,7 @@
 from qa_guru_hw_4_10.pages.registration_page import RegistrtionPage
 
 
-def test_student_registration_form():
+def test_student_registration_form(browser_setup):
     registration_page = RegistrtionPage()
     registration_page.open()
 
