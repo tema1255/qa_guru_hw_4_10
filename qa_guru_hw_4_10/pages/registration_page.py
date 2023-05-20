@@ -6,11 +6,7 @@ from qa_guru_hw_4_10.data.user import User
 class RegistrtionPage:
 
     def open(self):
-        browser.config.window_width = 1280
-        browser.config.window_height = 768
-        browser.config.hold_browser_open = True
-        browser.open("https://demoqa.com/automation-practice-form")
-        return self
+        browser.open("/automation-practice-form")
 
     def register(self, user: User):
         browser.element('#firstName').type(user.first_name)
